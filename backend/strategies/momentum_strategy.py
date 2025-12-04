@@ -29,22 +29,32 @@ class MomentumStrategy(StrategyBase):
 
     def calculate_rsi(self, prices: pd.Series, period: int = 14) -> pd.Series:
         """
-        Calculate RSI indicator.
+        Calculate RSI indicator using optimized pandas operations.
+        
+        Uses Exponential Weighted Moving Average for smooth calculation.
 
         Args:
             prices: Close prices
             period: RSI period
 
         Returns:
-            RSI values
+            RSI values (0-100)
         """
+        # Calculate price changes
         delta = prices.diff()
-        gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
-        loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
-
-        rs = gain / loss
+        
+        # Separate gains and losses
+        gain = delta.where(delta > 0, 0.0)
+        loss = -delta.where(delta < 0, 0.0)
+        
+        # Use exponential weighted moving average for smoother RSI
+        avg_gain = gain.ewm(com=period - 1, min_periods=period).mean()
+        avg_loss = loss.ewm(com=period - 1, min_periods=period).mean()
+        
+        # Calculate RS and RSI
+        rs = avg_gain / avg_loss
         rsi = 100 - (100 / (1 + rs))
-
+        
         return rsi
 
     async def analyze(self, symbol: str, data: pd.DataFrame) -> Signal:

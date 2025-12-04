@@ -29,7 +29,6 @@ aiohttp = "^3.9.1"
 # Data Processing
 pandas = "^2.1.4"
 numpy = "^1.26.3"
-ta-lib = "^0.4.28"  # Technical Analysis
 python-dateutil = "^2.8.2"
 
 # Machine Learning

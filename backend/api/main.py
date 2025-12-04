@@ -9,6 +9,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 from sqlalchemy.orm import Session
 
+# Initialize logging first
+from backend.core.logging_config import setup_logging
+setup_logging()
+
 from backend.core.config import settings
 from backend.core.cpu_monitor import cpu_monitor
 from backend.data.database import database, get_db
