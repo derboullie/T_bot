@@ -91,6 +91,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include advanced routes
+from backend.api.advanced_routes import router as advanced_router
+app.include_router(advanced_router)
+
 
 # Health check
 @app.get("/")
@@ -106,7 +110,8 @@ async def root():
 @app.get("/api/health")
 async def health_check():
     """Health check endpoint."""
-    return {"status": "healthy", "timestamp": logger._core.handlers[0].formatter._record["time"]}
+    from datetime import datetime
+    return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
 
 # System status
